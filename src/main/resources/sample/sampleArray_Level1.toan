@@ -1,0 +1,5 @@
+Person(name=S,desc=S,age=I,height=F)>
+Person[3]>
+Ahmad,Student,19,18.5
+Hadi,Student,10,11.5
+hi,Engineer,19,1
