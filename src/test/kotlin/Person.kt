@@ -1,3 +1,4 @@
+import seaskyways.toan.TOANMapper
 import seaskyways.toan.spec.TOANObjectArchitecture
 import seaskyways.toan.spec.TOANSerializable
 import seaskyways.toan.spec.TOANType
@@ -10,7 +11,7 @@ import seaskyways.toan.stdlib.primitive.StringTOAN
  * Created by Ahmad Al-Sharif on 19/05 - May/17.
  */
 data class Person(val name: String, val description: String, val age: Int, val height: Float) : TOANSerializable {
-    companion object {
+    companion object : TOANType<Person> {
         val toanArchitecture = object : TOANObjectArchitecture {
             override val tag: String
                 get() = "Person"
@@ -22,8 +23,18 @@ data class Person(val name: String, val description: String, val age: Int, val h
                     TypedKey("name", FloatTOAN)
             )
         }
+
+        override val typeTag: String = toanArchitecture.tag
+
+        override fun fromString(mapper: TOANMapper, string: String): Person {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun toString(mapper: TOANMapper, value: Any?): String {
+            return mapper.objectToRow(value as Person)
+        }
     }
 
-    override val architecture: Set<TOANType<*>> = setOf(StringTOAN, StringTOAN, IntTOAN, FloatTOAN)
-    override val toTOANList: List<String> = listOf(name, description, age.toString(), height.toString())
+    override val architecture: List<TOANType<*>> = listOf(StringTOAN, StringTOAN, IntTOAN, FloatTOAN)
+    override val valueList: List<*> = listOf(name, description, age, height)
 }

@@ -1,5 +1,6 @@
 package seaskyways.toan.stdlib.primitive
 
+import seaskyways.toan.TOANMapper
 import seaskyways.toan.spec.TOANType
 
 /**
@@ -7,7 +8,5 @@ import seaskyways.toan.spec.TOANType
  */
 object FloatTOAN : TOANType<Float> {
     override val typeTag: String = "F"
-    override fun fromString(string: String): Float {
-        return string.toFloat()
-    }
+    override fun fromString(mapper: TOANMapper, string: String) = string.toFloat()
 }
