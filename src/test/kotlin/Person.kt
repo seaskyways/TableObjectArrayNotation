@@ -20,7 +20,7 @@ data class Person(val name: String, val description: String, val age: Int, val h
                     TypedKey("name", StringTOAN),
                     TypedKey("desc", StringTOAN, true),
                     TypedKey("age", IntTOAN),
-                    TypedKey("name", FloatTOAN)
+                    TypedKey("height", FloatTOAN)
             )
         }
 
