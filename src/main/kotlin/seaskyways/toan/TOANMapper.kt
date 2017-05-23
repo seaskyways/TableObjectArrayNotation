@@ -6,6 +6,7 @@ import seaskyways.toan.spec.TOANConstants.arrayEnd
 import seaskyways.toan.spec.TOANConstants.arrayStart
 import seaskyways.toan.spec.TOANConstants.newLine
 import seaskyways.toan.spec.TOANConstants.next
+import seaskyways.toan.spec.TOANConstants.nullValue
 import seaskyways.toan.spec.TOANConstants.nullableIdentifier
 import seaskyways.toan.spec.TOANConstants.separator
 import seaskyways.toan.spec.TOANConstants.typeOperator
@@ -13,6 +14,7 @@ import seaskyways.toan.spec.TOANConstants.typePropertiesEnd
 import seaskyways.toan.spec.TOANConstants.typePropertiesStart
 import seaskyways.toan.spec.TOANObjectArchitecture
 import seaskyways.toan.spec.TOANSerializable
+import seaskyways.toan.spec.TOANType
 import java.util.concurrent.*
 import kotlin.concurrent.thread
 
@@ -42,13 +44,25 @@ class TOANMapper {
     fun architectureToHeader(toanArchitecture: TOANObjectArchitecture) = buildString { this.architectureToHeader(toanArchitecture) }
 
     fun objectToRow(toanSerializable: TOANSerializable): String = buildString { objectToRow(toanSerializable, this) }
-    fun objectToRow(builder: TOANSerializable, stringBuilder: StringBuilder) = stringBuilder.apply {
-        builder.valueList.zip(builder.architecture)
+    fun objectToRow(toanSerializable: TOANSerializable, stringBuilder: StringBuilder, lastChar: Char? = null) = stringBuilder.apply {
+        toanSerializable.valueList.zip(toanSerializable.architecture)
                 .forEach { (any, toan) ->
-                    this.append(toan.toString(this@TOANMapper, any))
+                    when {
+                        toan.isNullable && any == null -> append(nullValue)
+                        toan.isArray -> arrayToRow(any as List<*>, stringBuilder)
+                        else -> append(toan.toString(this@TOANMapper, any))
+                    }
                     this.append(separator)
                 }
         this.deleteCharAt(this.lastIndex)
+        lastChar?.let { append(lastChar) }
+    }
+
+    fun arrayToRow(value: List<*>, builder: StringBuilder): Unit = with(builder) {
+        append("[${value.size}]>")
+        value.map { it as TOANSerializable }
+                .forEach { objectToRow(it, this, ',') }
+        deleteCharAt(lastIndex)
     }
 
     private fun StringBuilder.appendToanList(toans: Array<TOANSerializable>, parallelism: Int = 1) {
