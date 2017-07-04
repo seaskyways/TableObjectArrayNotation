@@ -44,6 +44,7 @@ class TOANMapper {
     fun architectureToHeader(toanArchitecture: TOANObjectArchitecture) = buildString { this.architectureToHeader(toanArchitecture) }
 
     fun objectToRow(toanSerializable: TOANSerializable): String = buildString { objectToRow(toanSerializable, this) }
+
     fun objectToRow(toanSerializable: TOANSerializable, stringBuilder: StringBuilder, lastChar: Char? = null) = stringBuilder.apply {
         toanSerializable.valueList.zip(toanSerializable.architecture)
                 .forEach { (any, toan) ->

@@ -5,6 +5,12 @@ import seaskyways.toan.spec.TOANConstants.nullValue
 
 /**
  * Created by Ahmad Al-Sharif on 19/05 - May/17.
+ * TOANType is the base interface any object that has to be part of another should implement.
+ * e.g:
+ * for
+ * class Person(val id:Int, val name: String)
+ *
+ *
  */
 interface TOANType<T> {
     val typeTag: String
